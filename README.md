@@ -1,6 +1,6 @@
 <div align="center">
   
-  <a href="https://andresgilvicente.github.io/COMPUTATIONAL-GEOMETRY-TOOLKIT/web_app/geometric_presentation.html">
+  <a href="https://andresgilvicente.github.io/COMPUTATIONAL-GEOMETRY-TOOLKIT/web_app/geometric_applet.html">
     <img src="assets/banner_readme.png" alt="Geometry Banner" width="100%" style="border-radius: 10px;">
   </a>
 
@@ -58,7 +58,8 @@ El proyecto mantiene una separación clara entre la lógica algorítmica pura (P
 ## 👥 Autores
 
 * **Jorge Carnicero Príncipe**
-* **Patricia Díaz**
+* **Patricia Díaz Barrón**
 * **Andrés Gil Vicente** 
 
-*Fecha de finalización: 10 de enero de 2026*
+*Fecha de finalización: 25 de noviembre de 2025*
+
