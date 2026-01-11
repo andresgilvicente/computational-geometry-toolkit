@@ -5,13 +5,13 @@
   </a>
 
   <h1>📐 Computational Geometry Toolkit</h1>
-  <p><strong>Herramienta interactiva para el análisis algorítmico de polígonos y geometría plana</strong></p>
+  <p><strong>Interactive tool for algorithmic analysis of polygons and planar geometry</strong></p>
 
   <p>
-    <a href="https://developer.mozilla.org/es/docs/Web/JavaScript">
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">
       <img src="https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
     </a>
-    <a href="https://developer.mozilla.org/es/docs/Web/HTML">
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">
       <img src="https://img.shields.io/badge/HTML5-Canvas-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
     </a>
     <a href="https://www.python.org/">
@@ -24,57 +24,56 @@
 
   <h3>
     <a href="https://andresgilvicente.github.io/computational-geometry-toolkit/web_app/geometric_applet.html">
-      🚀 LANZAR WEB INTERACTIVA
+      🚀 LAUNCH INTERACTIVE WEB APP
     </a>
   </h3>
 </div>
 
 <hr />
 
-## 📖 Introducción
+## 📖 Introduction
 
-**Computational Geometry Toolkit** es un proyecto académico desarrollado para la asignatura de *Geometría Computacional* del Grado en **Ingeniería Matemática e Inteligencia Artificial (iMAT)** en la **Universidad Pontifica Comillas ICAI**.
+**Computational Geometry Toolkit** is an academic project developed for the *Computational Geometry* course of the **Mathematical Engineering and Artificial Intelligence (iMAT)** degree at **Universidad Pontificia Comillas ICAI**.
 
-El objetivo del proyecto es proporcionar una interfaz visual y robusta que permita a cualquier usuario comprender algoritmos geométricos complejos y probarlos fácilmente. La herramienta permite dibujar polígonos, analizar su topología (convexidad, área, diagonales) y estudiar su interacción con puntos externos (tangentes, inclusión) mediante algoritmos matemáticos precisos implementados desde cero. 
+The goal of the project is to provide a robust and visual interface that allows any user to understand complex geometric algorithms and test them easily. The tool allows drawing polygons, analyzing their topology (convexity, area, diagonals), and studying their interaction with external points (tangents, inclusion) using precise mathematical algorithms implemented from scratch.
 
-Además, se ha hecho especial énfases en diseñar una interfaz de usuario que haga la experiencia sencilla e intuitiva, proporcionando constantemente mensajes de feedback e indicaciones para facilitar la comprensión de los algoritmos. 
+Furthermore, special emphasis has been placed on designing a user interface that makes the experience simple and intuitive, constantly providing feedback messages and prompts to facilitate the understanding of the algorithms.
 
-## 📂 Estructura del Repositorio
+## 📂 Repository Structure
 
-El proyecto mantiene una separación clara entre la lógica algorítmica pura (Python) y la interfaz de visualización web:
+The project maintains a clear separation between the pure algorithmic logic (Python) and the web visualization interface:
 
 ```text
-├── 📂 python_core/                      # Lógica matemática y algoritmos base
-│   └── 📄 functions.py                   # Implementación en Python (Convex Hull, Ray Casting, etc.)
+├── 📂 python_core/                      # Mathematical logic and base algorithms
+│   └── 📄 functions.py                   # Python implementation (Convex Hull, Ray Casting, etc.)
 │
-├── 📂 web_app/                           # Aplicación Web Interactiva
-│   ├── 📄 geometric_applet.html          # Motor gráfico (Canvas) y lógica JS
-│   └── 📄 geometric_presentation.html    # Portada, teoría y documentación web
+├── 📂 web_app/                          # Interactive Web Application
+│   ├── 📄 geometric_applet.html          # Graphics engine (Canvas) and JS logic
+│   └── 📄 geometric_presentation.html    # Cover page, theory, and web documentation
 │
-├── 📄 .gitignore                         # Configuración de exclusiones de Git
-└── 📄 README.md                          # Documentación principal del repositorio
-└── 📄 index.html                         # Página de inicio (landing) para GitHub Pages: redirige a la app interactiva
+├── 📄 .gitignore                        # Git exclusion configuration
+└── 📄 README.md                         # Main repository documentation
+└── 📄 index.html                        # Landing page for GitHub Pages: redirects to the interactive app
+
 ```
 
-## 📚 Documentación y Guía de Uso
+## 📚 Documentation and User Guide
 
-Toda la **documentación del proyecto**, incluyendo:
+All the **project documentation**, including:
 
-- La **explicación teórica de los algoritmos** de geometría computacional implementados (envolvente convexa, ray casting, tangentes, etc.)
-- El **análisis de su funcionamiento paso a paso**  
-- Una **guía completa de uso de la web interactiva**
+* The **theoretical explanation of the implemented computational geometry algorithms** (convex hull, ray casting, tangents, etc.)
+* The **step-by-step analysis of their operation**
+* A **complete user guide for the interactive web app**
 
-se encuentra disponible en la **página de presentación del proyecto**, accesible desde el enlace de la web interactiva, en la parte de teoría.
+is available on the **project presentation page**, accessible from the interactive web link, in the theory section.
 
-Esta página actúa como **manual principal del proyecto**, integrando teoría, visualizaciones dinámicas y explicaciones orientadas a facilitar la comprensión de los algoritmos geométricos implementados.
+This page acts as the **main manual for the project**, integrating theory, dynamic visualizations, and explanations oriented towards facilitating the understanding of the implemented geometric algorithms.
 
-## 👥 Autores
+## 👥 Authors
 
 * **Jorge Carnicero Príncipe**
 * **Patricia Díaz Barrón**
-* **Andrés Gil Vicente** 
+* **Andrés Gil Vicente**
 
-*Fecha de finalización: 25 de noviembre de 2025*
-
-
+*Completion date: November 25, 2025*
 
