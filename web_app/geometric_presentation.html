@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio General de Punto y Polígono - Geometría Computacional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header-hero {
+            background: linear-gradient(135deg, rgba(18, 32, 97, 0.95) 0%, rgba(100, 67, 134, 0.95) 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .header-hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-hero .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 10px;
+        }
+
+        .header-hero .course-info {
+            font-size: 1.1em;
+            opacity: 0.85;
+            margin-top: 15px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            color: #667eea;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .subsection-title {
+            font-size: 1.6em;
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .content-section p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            text-align: justify;
+        }
+
+        .algorithm-box {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .algorithm-box h4 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .algorithm-box p {
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            background: #e8eaf6;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .instructions-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .instructions-list li {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+            transition: all 0.3s ease;
+        }
+
+        .instructions-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .instructions-list li strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #92d50c 0%, #92d50c 100%);
+            color: white;
+            padding: 25px 60px;
+            font-size: 1.5em;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .objective-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .objective-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .objective-card h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .color-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .color-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid #333;
+        }
+
+        footer {
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            text-align: center;
+            border-radius: 20px;
+            margin-top: 40px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #667eea30 0%, #764ba230 100%);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-hero">
+        <h1>Estudio General de Punto y Polígono</h1>
+        <p class="subtitle">Análisis Geométrico Computacional Interactivo</p>
+        <p class="course-info">Geometría Computacional • Grado iMAT • Curso 2025-2026</p>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <h2 class="section-title">Introducción</h2>
+            <p>
+                Este proyecto presenta una <span class="highlight">herramienta interactiva</span> para el análisis exhaustivo de polígonos y la relación espacial de puntos respecto a ellos. Utilizando algoritmos fundamentales de geometría computacional, la aplicación permite estudiar propiedades geométricas esenciales de manera visual e intuitiva.
+            </p>
+            <p>
+                El análisis que ofrece la herramienta interactiva se divide en <span class="highlight">seis apartados principales</span>, cada uno implementando algoritmos específicos que permiten comprender la naturaleza geométrica de los polígonos, sus características y su interacción con puntos en el plano.
+            </p>
+
+            <div class="objectives-grid">
+                <div class="objective-card">
+                    <h3>1️⃣ Convexidad del Polígono</h3>
+                    <p>Determinar si el polígono es convexo o cóncavo mediante el análisis de giros.</p>
+                </div>
+                <div class="objective-card">
+                    <h3>2️⃣ Punto en Polígono</h3>
+                    <p>Localizar si un punto se encuentra dentro, fuera o sobre el borde del polígono.</p>
+                </div>
+                <div class="objective-card">
+                    <h3>3️⃣ Tangentes desde Punto</h3>
+                    <p>Calcular las líneas tangentes desde un punto exterior al polígono.</p>
+                </div>
+                <div class="objective-card">
+                    <h3>4️⃣ Área del Polígono</h3>
+                    <p>Calcular el área utilizando el método del área signada.</p>
+                </div>
+                <div class="objective-card">
+                    <h3>5️⃣ Diagonales</h3>
+                    <p>Identificar y clasificar diagonales internas y externas.</p>
+                </div>
+                <div class="objective-card">
+                    <h3>6️⃣ Vértices Convexos /Cóncavos</h3>
+                    <p>Clasificar cada vértice según su tipo geométrico.</p>
+                </div>
+                <div class="objective-card" style="grid-column: 2 / 3;">
+                    <h3>7️⃣ Cierre Convexo</h3>
+                    <p>Calcular el cierre convexo del polígono usando el algoritmo de Lee (Gift Wrapping).</p>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Fundamentos Teóricos de los Algoritmos</h2>
+
+            <div class="algorithm-box">
+                <h4>Área Signada de un Triángulo</h4>
+                <p>
+                    La base de todos los algoritmos es el cálculo del <span class="highlight">área signada</span> de un triángulo formado por tres puntos a, b, c :
+                </p>
+                <div class="formula">
+                    área(a, b, c) = [(b.x - a.x)(c.y - a.y) - (b.y - a.y)(c.x - a.x)] / 2
+                </div>
+                <p>
+                    El signo del área indica la orientación: positivo para giro antihorario, negativo para horario, y cero si los puntos son colineales.
+                </p>
+            </div>
+
+            <h3 class="subsection-title">Apartado 1: Detección de Convexidad</h3>
+            <div class="algorithm-box">
+                <h4>Fundamento Teórico</h4>
+                <p>
+                    La convexidad de un polígono se determina analizando la orientación de los giros consecutivos de sus vértices. Si todos los giros poseen el mismo signo, el polígono es convexo; si existen giros con signo distinto, es cóncavo.
+                </p>
+
+                <h4>Lógica del Algoritmo</h4>
+                <p>
+                    Para cada trío consecutivo de vértices (v<sub>i-1</sub>, v<sub>i</sub>, v<sub>i+1</sub>), se calcula el área signada. El signo de cada valor indica la orientación local (horaria o antihoraria). Se recogen todos los signos no nulos y se comprueba si son iguales.
+                </p>
+
+                <h4>Aplicaciones Prácticas</h4>
+                <p>
+                    Detección de polígonos convexos es fundamental en gráficos computacionales, colisiones y optimización geométrica, donde los algoritmos se simplifican si las regiones son convexas.
+                </p>
+            </div>
+
+            <h3 class="subsection-title">Apartado 2: Punto en Polígono (Ray Casting)</h3>
+            <div class="algorithm-box">
+                <h4>Fundamento Teórico</h4>
+                <p>
+                    El problema consiste en determinar si un punto está dentro, fuera o sobre el borde de un polígono. Se basa en la paridad de intersecciones entre un rayo lanzado desde el punto y los lados del polígono.
+                </p>
+
+                <h4>Lógica del Algoritmo</h4>
+                <p>
+                    Se traza una semirrecta horizontal desde el punto hasta el infinito. Por cada arista, se verifica si el rayo la cruza. Si el número total de cruces es impar, el punto está dentro; si es par, está fuera. Si el punto pertenece a una arista, se considera en el borde.
+                </p>
+
+                <h4>Aplicaciones Prácticas</h4>
+                <p>
+                    Usado en detección de colisiones, selección de objetos en interfaces gráficas y análisis de pertenencia de puntos en regiones geográficas o modelos CAD.
+                </p>
+            </div>
+
+
+            <h3 class="subsection-title">Apartado 3: Tangentes desde un Punto Exterior</h3>
+            <div class="algorithm-box">
+                <h4>Fundamento Teórico</h4>
+                <p>
+                    Desde un punto exterior a un polígono, las tangentes son líneas que tocan al polígono en un solo punto sin cortarlo. El criterio de cambio de signo en el área signada permite detectarlas.
+                </p>
+
+                <h4>Lógica del Algoritmo</h4>
+                <p>
+                    Se recorren las aristas (v<sub>i</sub>, v<sub>i+1</sub>) y se calcula el signo del área signada del triángulo (v<sub>i</sub>, v<sub>i+1</sub>, q). Cuando hay un cambio de signo entre aristas consecutivas, se detecta una tangente.
+                </p>
+
+                <h4>Aplicaciones Prácticas</h4>
+                <p>
+                    En visión por ordenador (detección de siluetas), robótica (trayectorias sin colisión) y óptica geométrica (trayectorias tangenciales).
+                </p>
+            </div>
+
+
+            <h3 class="subsection-title">Apartado 4: Cálculo del Área</h3>
+            <div class="algorithm-box">
+                <h4>Fundamento Teórico</h4>
+                <p>
+                    El área de un polígono simple puede calcularse sumando las áreas signadas de los triángulos formados por un vértice fijo y cada par consecutivo de vértices adyacentes.
+                </p>
+
+                <h4>Lógica del Algoritmo</h4>
+                <p>
+                    Se fija un vértice p<sub>0</sub> y se recorren los pares (p<sub>i</sub>, p<sub>i+1</sub>). Se acumulan las áreas signadas del triángulo (p<sub>0</sub>, p<sub>i</sub>, p<sub>i+1</sub>). El área final es el valor absoluto de la suma.
+                </p>
+
+                <h4>Aplicaciones Prácticas</h4>
+                <p>
+                    Cálculo de superficies en CAD, GIS, y simulaciones físicas donde el área determina magnitudes (densidad, masa, flujo, etc.).
+                </p>
+            </div>
+
+
+            <h3 class="subsection-title">Apartado 5: Diagonales Internas y Externas</h3>
+            <div class="algorithm-box">
+                <h4>Fundamento Teórico</h4>
+                <p>
+                    Una diagonal conecta dos vértices no adyacentes del polígono. La clasificación en interna o externa depende de si la diagonal está completamente dentro o fuera del polígono.
+                </p>
+
+                <h4>Lógica del Algoritmo</h4>
+                <p>
+                    Se generan todas las posibles diagonales. Cada una se descarta si interseca con algún lado. Después, según la convexidad local de los vértices extremos, se determina si la diagonal es interna (visible dentro) o externa.
+                </p>
+
+                <h4>Aplicaciones Prácticas</h4>
+                <p>
+                    Utilizado en triangulación de polígonos, modelado 3D, descomposición en mallas y detección de visibilidad.
+                </p>
+            </div>
+
+
+            <h3 class="subsection-title">Apartado 6: Vértices Convexos y Cóncavos</h3>
+            <div class="algorithm-box">
+                <h4>Fundamento Teórico</h4>
+                <p>
+                    Un vértice es convexo si el ángulo interior del polígono en ese punto es menor de 180°, y cóncavo si es mayor. Esto se determina mediante el signo del área signada del triángulo formado por el vértice y sus adyacentes.
+                </p>
+
+                <h4>Lógica del Algoritmo</h4>
+                <p>
+                    Se calcula el signo del área signada para cada trío consecutivo (v<sub>i-1</sub>, v<sub>i</sub>, v<sub>i+1</sub>). Si el signo coincide con la orientación global del polígono, el vértice es convexo; si es opuesto, es cóncavo.
+                </p>
+
+                <h4>Aplicaciones Prácticas</h4>
+                <p>
+                    Identificación de puntos críticos en polígonos, simplificación de contornos, análisis de forma y segmentación de regiones.
+                </p>
+            </div>
+
+            <h3 class="subsection-title">Apartado 7: Cierre Convexo (Algoritmo de Lee / Gift Wrapping)</h3>
+            <div class="algorithm-box">
+                <h4>Fundamento Teórico</h4>
+                <p>
+                    El <strong>cierre convexo</strong> de un conjunto de puntos es el polígono convexo más pequeño que los contiene a todos. 
+                    Se puede imaginar como una banda elástica que se estira alrededor de los puntos y se ajusta a su forma exterior. 
+                    Este concepto es fundamental en geometría computacional, ya que permite definir límites convexos de conjuntos arbitrarios.
+                </p>
+
+                <h4>Lógica del Algoritmo</h4>
+                <p>
+                    El <strong>algoritmo de Lee</strong>, también conocido como <em>Gift Wrapping</em>, 
+                    comienza buscando el punto más inferior (y más a la izquierda en caso de empate). 
+                    Desde ese punto, se selecciona iterativamente el vértice que forma el ángulo más a la izquierda con respecto al anterior, 
+                    "envolviendo" todos los puntos hasta regresar al punto inicial. 
+                    Este proceso garantiza un recorrido completo del contorno convexo.
+                </p>
+
+                <h4>Aplicaciones Prácticas</h4>
+                <p>
+                    El cierre convexo se aplica en una amplia variedad de áreas:
+                </p>
+                <ul style="margin-left: 25px; line-height: 1.6;">
+                    <li><strong>Visión por computador:</strong> delimitación de contornos de objetos o agrupaciones de píxeles (por ejemplo, la silueta de una mano o un rostro).</li>
+                    <li><strong>Machine Learning:</strong> identificación de fronteras y regiones de datos en análisis de clusters o nubes de puntos.</li>
+                    <li><strong>Robótica:</strong> planificación de trayectorias y cálculo de zonas de seguridad alrededor de obstáculos.</li>
+                    <li><strong>Cartografía y SIG:</strong> definición de zonas convexas mínimas que engloban puntos geográficos relevantes (por ejemplo, límites de un parque natural o una ciudad).</li>
+                </ul>
+            </div>
+
+
+        </div>
+
+        <div class="content-section" style="margin-top: 40px;">
+            <h2 class="section-title">Aplicaciones Reales y Casos de Uso</h2>
+
+            <p>
+                Los algoritmos implementados en esta web interactiva no solo tienen valor académico, sino que constituyen la base de múltiples soluciones prácticas en ingeniería, computación y análisis geométrico. A continuación, se presentan algunos ejemplos concretos de su aplicación en contextos reales.
+            </p>
+
+            <div class="algorithm-box" style="padding: 20px;">
+                <h3 style="color: #667eea;">1. Detección de Convexidad</h3>
+                <p>
+                    El análisis de la convexidad es esencial en <strong>procesamiento de imágenes</strong> y <strong>visión por computador</strong>. 
+                    Permite identificar formas regulares, detectar objetos o determinar contornos de figuras reconocibles. 
+                    Por ejemplo, en un sistema de inspección industrial automatizado, este algoritmo se usa para verificar si una pieza metálica tiene deformaciones (cóncavas) o mantiene su forma convexa.
+                </p>
+                <p><em>Ejemplo real:</em> Control de calidad en producción de tuercas y engranajes mediante análisis de contornos convexos.</p>
+            </div>
+
+            <div class="algorithm-box" style="padding: 20px;">
+                <h3 style="color: #667eea;">2. Punto en Polígono</h3>
+                <p>
+                    Este algoritmo se emplea en <strong>sistemas GIS (Geographic Information Systems)</strong> para determinar si una coordenada geográfica se encuentra dentro de una zona determinada: 
+                    por ejemplo, si una estación meteorológica pertenece a un área de riesgo o si un usuario está dentro de una región con cobertura 5G.
+                </p>
+                <p><em>Ejemplo real:</em> Determinar si un dron se encuentra dentro del espacio aéreo permitido o en zona restringida.</p>
+            </div>
+
+            <div class="algorithm-box" style="padding: 20px;">
+                <h3 style="color: #667eea;">3. Cálculo de Tangentes desde un Punto</h3>
+                <p>
+                    Las tangentes a un polígono tienen aplicaciones en <strong>robótica y planificación de trayectorias</strong>. 
+                    Sirven para generar trayectorias seguras sin colisión entre un robot y un obstáculo poligonal. 
+                    En gráficos por ordenador, las tangentes también se usan para calcular sombras o campos de visión.
+                </p>
+                <p><em>Ejemplo real:</em> Robots móviles que deben desplazarse alrededor de objetos con trayectorias tangentes sin invadir el espacio de colisión.</p>
+            </div>
+
+            <div class="algorithm-box" style="padding: 20px;">
+                <h3 style="color: #667eea;">4. Cálculo del Área</h3>
+                <p>
+                    El cálculo de áreas mediante el método del área signada se utiliza en <strong>modelado CAD</strong>, 
+                    <strong>cartografía digital</strong> y <strong>simulaciones físicas</strong> donde es necesario obtener superficies exactas. 
+                    También se aplica en <strong>agrimensura</strong> para medir parcelas irregulares a partir de coordenadas GPS.
+                </p>
+                <p><em>Ejemplo real:</em> Cálculo automático de la superficie útil de una finca o edificio a partir de los vértices registrados por dron.</p>
+            </div>
+
+            <div class="algorithm-box" style="padding: 20px;">
+                <h3 style="color: #667eea;">5. Diagonales Internas y Externas</h3>
+                <p>
+                    Las diagonales de un polígono son fundamentales en <strong>computación gráfica</strong> y <strong>modelado 3D</strong>. 
+                    Se usan para subdividir superficies en triángulos (triangulación), proceso esencial en el renderizado y en simulaciones físicas basadas en mallas.
+                </p>
+                <p><em>Ejemplo real:</em> Generación de mallas triangulares en motores gráficos como Unity o Blender para modelar objetos complejos.</p>
+            </div>
+
+            <div class="algorithm-box" style="padding: 20px;">
+                <h3 style="color: #667eea;">6. Clasificación de Vértices Cóncavos y Convexos</h3>
+                <p>
+                    Esta clasificación se utiliza en <strong>simplificación de contornos</strong> y en <strong>reconocimiento de formas</strong>. 
+                    Los vértices cóncavos pueden indicar zonas de pliegue o deformación en estructuras físicas, mientras que los convexos delimitan los bordes exteriores más estables.
+                </p>
+                <p><em>Ejemplo real:</em> Análisis estructural de piezas 3D para detectar zonas con tensión o deformación en software de ingeniería (como SolidWorks o ANSYS).</p>
+            </div>
+
+            <div class="algorithm-box" style="padding: 20px;">
+                <h3 style="color: #667eea;">7. Cierre Convexo (Convex Hull)</h3>
+                <p>
+                    El cierre convexo es un concepto esencial en <strong>análisis de datos</strong> y <strong>machine learning</strong>, 
+                    ya que permite delimitar regiones mínimas que contienen un conjunto de puntos. 
+                    Se usa para identificar fronteras de clusters, agrupar nubes de puntos o definir zonas de influencia.
+                </p>
+                <p><em>Ejemplo real:</em> En visión artificial, el cierre convexo se emplea para reconocer el contorno mínimo que encierra un conjunto de píxeles (por ejemplo, la silueta de una mano o de un objeto).</p>
+            </div>
+
+                <p>
+                    En definitiva, estos algoritmos constituyen la base de numerosos <strong>proyectos reales</strong>:
+                </p>
+                <ul style="margin-left: 20px; line-height: 1.6;">
+                    <li>Sistemas de geolocalización y geofencing en mapas digitales.</li>
+                    <li>Navegación autónoma de drones y vehículos inteligentes.</li>
+                    <li>Modelado estructural en ingeniería civil y mecánica.</li>
+                    <li>Segmentación y análisis de formas en inteligencia artificial.</li>
+                    <li>Motores de renderizado y simulación en videojuegos.</li>
+                </ul>
+
+                <p style="margin-top: 10px;">
+                    Estos ejemplos ilustran la conexión directa entre la <strong>geometría computacional</strong> y las <strong>tecnologías aplicadas</strong> en la industria, la investigación y el desarrollo de software.
+                </p>
+        </div>
+
+
+        <div class="content-section">
+            <h2 class="section-title">Instrucciones de Uso de la Web Interactiva</h2>
+
+            <h3 class="subsection-title">Definición del Polígono</h3>
+            <ul class="instructions-list">
+                <li>
+                    <strong>Modo Manual:</strong> Haz clic en la cuadrícula para añadir vértices a tu polígono. Los puntos se ordenarán automáticamente. (V0, V1, V2...)
+                </li>
+                <li>
+                    <strong>Modo Aleatorio:</strong> Usa el botón "ALEATORIO" para crear un polígono con el número de vértices especificado mediante  el slider.
+                </li>
+                <li>
+                    <strong>Limpiar:</strong> El botón "LIMPIAR TODO" borra todos los vértices del polígono creado y te permite volver a empezar de nuevo.
+                </li>
+                <li>
+                    <strong>Eliminar último punto:</strong> Usa el botón "BORRAR ÚLTIMO" para eliminar el último vértice que se haya añadido a tu polígono.
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">Colocación del Punto de Estudio</h3>
+            <p>
+                Si la opción seleccionada requiere de colocar un punto de estudio en la cuadrícula, deberás hacerlo mediante una de estas 2 opciones:
+            </p>
+            <ul class="instructions-list">
+                <li>
+                    <strong>Clic derecho:</strong> Haz clic derecho sobre la cuadrícula para posicionar el punto de estudio (punto rojo). Verás como va cambiando su posición.
+                </li>
+                <li>
+                    <strong>Coordenadas manuales:</strong> Introduce las coordenadas X e Y en los campos de entrada y pulsa "ACTUALIZAR PUNTO".
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">Selección de Apartados</h3>
+            <ul class="instructions-list">
+                <li>
+                    <strong>Menú desplegable:</strong> Selecciona el apartado que deseas analizar desde el menú principal. Cada apartado muestra su propia interfaz específica.
+                </li>
+                <li>
+                    <strong>Análisis independiente:</strong> Puedes ejecutar cada análisis de forma independiente, reutilizando el polígono previamente definido.
+                </li>
+                <li>
+                    <strong>Visualización:</strong> Fíjate en los elementos visuales que más te interesen (tangentes, diagonales, vértices clasificados) haciendo uso de la leyenda. Además, podrás activar o desactivar algunos elementos para así personalizar la salida visual que deseas obtener y facilitar tu estudio.
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">Interpretación de Resultados</h3>
+            <p style="font-size: 1.1em; margin: 20px 0;">
+                Los resultados se muestran en el panel inferior con información detallada de cada análisis. Como por ejemplo:
+            </p>
+
+            <div class="color-legend">
+                <div class="color-item">
+                    <div class="color-box" style="background: black"></div>
+                    <span><strong>Negro:</strong> Polígono principal</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: red"></div>
+                    <span><strong>Rojo:</strong> Punto de estudio / Vértices cóncavos</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: blue"></div>
+                    <span><strong>Azul:</strong> Líneas tangentes</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: orange"></div>
+                    <span><strong>Naranja:</strong> Diagonales internas</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: gray"></div>
+                    <span><strong>Gris:</strong> Diagonales externas</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: green"></div>
+                    <span><strong>Verde:</strong> Vértices convexos</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: rgb(180, 31, 180)"></div>
+                    <span><strong>Morado:</strong> Cierre convexo</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: rgb(248, 122, 193)"></div>
+                    <span><strong>Rosa:</strong> Rayo / Intersecciones</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <a href="./geometric_applet.html" class="cta-button">
+                Entrar en la Aplicación Interactiva
+            </a>
+        </div>
+
+        <footer>
+            <p><strong>Proyecto Final - Geometría Computacional</strong></p>
+            <p>Grado en Ingeniería Matemática e Inteligencia Artificial (iMAT)</p>
+            <p>Curso 2025-2026</p>
+            <p>Patricia Díaz, Jorge Carnicero y Andrés Gil</p>
+        </footer>
+    </div>
+</body>
+</html>

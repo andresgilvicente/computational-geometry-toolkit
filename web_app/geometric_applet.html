@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applet Interactivo - Estudio de Polígonos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(18, 32, 97, 0.95) 0%, rgba(100, 67, 134, 0.95) 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-back {
+            background: white;
+            color: #667eea;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 0;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            padding: 25px;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            max-height: calc(100vh - 150px);
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ee5a6f;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ffa502;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #ff8800;
+            transform: translateY(-2px);
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .apartado-selector {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            background: white;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .apartado-selector:hover {
+            background: #f0f4ff;
+        }
+
+        .apartado-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .apartado-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .canvas-container {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        canvas {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: crosshair;
+            background: #fafafa;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .results {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .results h3 {
+            font-family: 'Segoe UI', sans-serif;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+        }
+
+        .legend-color {
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            border: 1px solid #333;
+        }
+
+        .slider-container {
+            margin-bottom: 15px;
+        }
+
+        .slider-container input[type="range"] {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .slider-value {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #e8eaf6;
+            transform: translateX(3px);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 0.9em;
+            user-select: none;
+        }
+
+        .polygon-stats {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            border: 1px solid #e0e0e0;
+        }
+
+        .polygon-stats strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Applet Interactivo - Estudio general de punto y polígono</h1>
+            <a href="./geometric_presentation.html" class="btn-back">← Volver a Teoría</a>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="section">
+                    <div class="section-title">Definir Polígono</div>
+                    <div class="info-box">
+                        <strong>Modo Manual:</strong> Haz clic sobre la cuadrícula para añadir vértices a tu polígono. Los puntos se ordenarán automáticamente.
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="generarPoligonoAleatorio()">Aleatorio</button>
+                        <button class="btn btn-warning" onclick="borrarUltimo()">Borrar Último</button>
+                    </div>
+                    <button class="btn btn-danger" style="width: 100%; margin-bottom: 10px" onclick="limpiarPoligono()">Limpiar Todo</button>
+                    
+                    <div class="slider-container">
+                        <label>Nº vértices aleatorios: <span class="slider-value" id="verticesValue">6</span></label>
+                        <input type="range" id="nVertices" min="3" max="15" value="6" oninput="document.getElementById('verticesValue').textContent = this.value">
+                    </div>
+
+                    <div class="polygon-stats" id="polygonStats">
+                        <strong>Vértices:</strong> 0
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Seleccionar Apartado</div>
+                    <select class="apartado-selector" id="apartadoSelector" onchange="cambiarApartado()">
+                        <option value="0">-- Selecciona un análisis --</option>
+                        <option value="1">1. Convexidad del polígono</option>
+                        <option value="2">2. Punto en polígono</option>
+                        <option value="3">3. Tangentes desde punto</option>
+                        <option value="4">4. Área del polígono</option>
+                        <option value="5">5. Diagonales</option>
+                        <option value="6">6. Vértices convexos/cóncavos</option>
+                        <option value="7">7. Cierre convexo</option>
+                    </select>
+                </div>
+
+                <div id="apartado1" class="apartado-content">
+                    <div class="section">
+                        <div class="section-title">Apartado 1: Convexidad</div>
+                        <div class="info-box">
+                            Analiza si el polígono es convexo o cóncavo mediante el estudio de los giros en cada vértice.
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%" onclick="analizarConvexidad()">Analizar Convexidad</button>
+                    </div>
+                </div>
+
+                <div id="apartado2" class="apartado-content">
+                    <div class="section">
+                        <div class="section-title">Apartado 2: Punto en Polígono</div>
+                        <div class="info-box">
+                            Haz clic derecho en el canvas para colocar el punto de estudio (rojo). Se mostrará el rayo y las intersecciones.
+                        </div>
+                        <div class="input-group">
+                            <label>Coordenada X:</label>
+                            <input type="number" id="puntoX" value="0" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label>Coordenada Y:</label>
+                            <input type="number" id="puntoY" value="0" step="0.1">
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%; margin-bottom: 10px" onclick="actualizarPuntoManual()">Actualizar Punto</button>
+                        <button class="btn btn-primary" style="width: 100%" onclick="analizarPuntoEnPoligono()">Analizar Posición</button>
+                    </div>
+                </div>
+
+                <div id="apartado3" class="apartado-content">
+                    <div class="section">
+                        <div class="section-title">Apartado 3: Tangentes</div>
+                        <div class="info-box">
+                            Calcula tangentes desde un punto exterior al polígono. Coloca el punto con clic derecho.
+                        </div>
+                        <div class="input-group">
+                            <label>Coordenada X:</label>
+                            <input type="number" id="puntoX3" value="0" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label>Coordenada Y:</label>
+                            <input type="number" id="puntoY3" value="0" step="0.1">
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%; margin-bottom: 10px" onclick="actualizarPuntoManual3()">Actualizar Punto</button>
+                        <button class="btn btn-primary" style="width: 100%" onclick="analizarTangentes()">Calcular Tangentes</button>
+                    </div>
+                </div>
+
+                <div id="apartado4" class="apartado-content">
+                    <div class="section">
+                        <div class="section-title">Apartado 4: Área</div>
+                        <div class="info-box">
+                            Calcula el área del polígono usando el método del área signada.
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%" onclick="analizarArea()">Calcular Área</button>
+                    </div>
+                </div>
+
+                <div id="apartado5" class="apartado-content">
+                    <div class="section">
+                        <div class="section-title">Apartado 5: Diagonales</div>
+                        <div class="info-box">
+                            Calcula y representa las diagonales internas y externas del polígono.
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="showDiagInt" checked>
+                                <label for="showDiagInt">Diagonales internas</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="showDiagExt">
+                                <label for="showDiagExt">Diagonales externas</label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%" onclick="analizarDiagonales()">Calcular Diagonales</button>
+                    </div>
+                </div>
+
+                <div id="apartado6" class="apartado-content">
+                    <div class="section">
+                        <div class="section-title">Apartado 6: Vértices</div>
+                        <div class="info-box">
+                            Clasifica los vértices del polígono como convexos o cóncavos.
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="showVertices" checked>
+                                <label for="showVertices">Mostrar clasificación</label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%" onclick="analizarVertices()">Clasificar Vértices</button>
+                    </div>
+                </div>
+
+                <div id="apartado7" class="apartado-content">
+                    <div class="section">
+                        <div class="section-title">Apartado 7: Cierre Convexo</div>
+                        <div class="info-box">
+                            Calcula el cierre convexo del polígono usando el algoritmo de Lee (Gift Wrapping).
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%" onclick="analizarCierreConvexo()">Calcular Cierre Convexo</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas" width="900" height="650"></canvas>
+                
+                <div class="legend" id="legend">
+                    <!-- Las leyendas se cargarán dinámicamente según el apartado activo -->
+                </div>
+
+                <div class="results" id="results">
+                    <h3>Resultados del Análisis</h3>
+                    <p>Añade vértices al polígono y selecciona un apartado para comenzar el análisis.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let poligono = [];
+        let punto = {x: 0, y: 0};
+        let apartadoActual = 0;
+        const escala = 35;
+        const offsetX = canvas.width / 2;
+        const offsetY = canvas.height / 2;
+
+        // Convertir coordenadas
+        function canvasToMath(cx, cy) {
+            return {
+                x: Math.round((cx - offsetX) / escala * 2) / 2,
+                y: Math.round((offsetY - cy) / escala * 2) / 2
+            };
+        }
+
+        function mathToCanvas(x, y) {
+            return {
+                x: x * escala + offsetX,
+                y: offsetY - y * escala
+            };
+        }
+
+        // Dibujar
+        function dibujar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Grid
+            ctx.strokeStyle = '#e8e8e8';
+            ctx.lineWidth = 1;
+            for (let i = -20; i <= 20; i++) {
+                const pos = mathToCanvas(i, 0);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, 0);
+                ctx.lineTo(pos.x, canvas.height);
+                ctx.stroke();
+                
+                const posY = mathToCanvas(0, i);
+                ctx.beginPath();
+                ctx.moveTo(0, posY.y);
+                ctx.lineTo(canvas.width, posY.y);
+                ctx.stroke();
+            }
+
+            // Ejes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, offsetY);
+            ctx.lineTo(canvas.width, offsetY);
+            ctx.moveTo(offsetX, 0);
+            ctx.lineTo(offsetX, canvas.height);
+            ctx.stroke();
+
+            // Números en ejes
+            ctx.fillStyle = '#999';
+            ctx.font = '11px Arial';
+            for (let i = -10; i <= 10; i += 2) {
+                if (i !== 0) {
+                    const pos = mathToCanvas(i, 0);
+                    ctx.fillText(i, pos.x - 5, offsetY + 15);
+                    const posY = mathToCanvas(0, i);
+                    ctx.fillText(i, offsetX + 5, posY.y + 5);
+                }
+            }
+
+            // Polígono con relleno verde suave
+            if (poligono.length > 0) {
+                // Relleno del polígono
+                ctx.fillStyle = 'rgba(144, 238, 144, 0.3)'; // Verde claro con transparencia
+                ctx.beginPath();
+                const first = mathToCanvas(poligono[0].x, poligono[0].y);
+                ctx.moveTo(first.x, first.y);
+                for (let i = 1; i < poligono.length; i++) {
+                    const p = mathToCanvas(poligono[i].x, poligono[i].y);
+                    ctx.lineTo(p.x, p.y);
+                }
+                if (poligono.length > 2) {
+                    ctx.closePath();
+                }
+                ctx.fill();
+
+                // Borde del polígono
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(first.x, first.y);
+                for (let i = 1; i < poligono.length; i++) {
+                    const p = mathToCanvas(poligono[i].x, poligono[i].y);
+                    ctx.lineTo(p.x, p.y);
+                }
+                if (poligono.length > 2) {
+                    ctx.closePath();
+                }
+                ctx.stroke();
+
+                // Vértices
+                poligono.forEach((p, i) => {
+                    const cp = mathToCanvas(p.x, p.y);
+                    ctx.fillStyle = 'black';
+                    ctx.beginPath();
+                    ctx.arc(cp.x, cp.y, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = 'black';
+                    ctx.font = 'bold 13px Arial';
+                    ctx.fillText(`V${i}`, cp.x + 10, cp.y - 10);
+                });
+            }
+
+            // Punto de estudio (solo en apartados 2 y 3)
+            if (apartadoActual === 2 || apartadoActual === 3) {
+                const cp = mathToCanvas(punto.x, punto.y);
+                ctx.fillStyle = 'red';
+                ctx.beginPath();
+                ctx.arc(cp.x, cp.y, 7, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cp.x, cp.y, 7, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+
+            actualizarStats();
+        }
+
+        function actualizarStats() {
+            document.getElementById('polygonStats').innerHTML = 
+                `<strong>Vértices:</strong> ${poligono.length}`;
+        }
+
+        // Actualizar leyendas según el apartado activo
+        function actualizarLeyendas() {
+            const legend = document.getElementById('legend');
+            let html = '';
+            
+            switch(apartadoActual) {
+                case 1: // Convexidad
+                    html = `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #90EE90"></div>
+                            <span>Polígono (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: black"></div>
+                            <span>Polígono (borde)</span>
+                        </div>
+                    `;
+                    break;
+                    
+                case 2: // Punto en polígono
+                    html = `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #90EE90"></div>
+                            <span>Polígono (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: black"></div>
+                            <span>Polígono (borde)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: red"></div>
+                            <span>Punto de estudio</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #FF69B4"></div>
+                            <span>Rayo / Intersecciones</span>
+                        </div>
+                    `;
+                    break;
+                    
+                case 3: // Tangentes
+                    html = `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #90EE90"></div>
+                            <span>Polígono (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: black"></div>
+                            <span>Polígono (borde)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: red"></div>
+                            <span>Punto de estudio</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: blue"></div>
+                            <span>Tangentes</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(128, 0, 128, 0.5)"></div>
+                            <span>Cierre convexo (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: purple"></div>
+                            <span>Cierre convexo (borde)</span>
+                        </div>
+                    `;
+                    break;
+                    
+                case 5: // Diagonales
+                    html = `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #90EE90"></div>
+                            <span>Polígono (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: black"></div>
+                            <span>Polígono (borde)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: orange"></div>
+                            <span>Diagonales internas</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: gray"></div>
+                            <span>Diagonales externas</span>
+                        </div>
+                    `;
+                    break;
+                    
+                case 6: // Vértices
+                    html = `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #90EE90"></div>
+                            <span>Polígono (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: black"></div>
+                            <span>Polígono (borde)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: green"></div>
+                            <span>Vértices convexos</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: red"></div>
+                            <span>Vértices cóncavos</span>
+                        </div>
+                    `;
+                    break;
+                    
+                case 7: // Cierre convexo
+                    html = `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #90EE90"></div>
+                            <span>Polígono (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: black"></div>
+                            <span>Polígono (borde)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(128, 0, 128, 0.5)"></div>
+                            <span>Cierre convexo (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: purple"></div>
+                            <span>Cierre convexo (borde)</span>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    html = `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #90EE90"></div>
+                            <span>Polígono (relleno)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: black"></div>
+                            <span>Polígono (borde)</span>
+                        </div>
+                    `;
+            }
+            
+            legend.innerHTML = html;
+        }
+
+        // Eventos del canvas
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const cx = e.clientX - rect.left;
+            const cy = e.clientY - rect.top;
+            const p = canvasToMath(cx, cy);
+            
+            // Evitar puntos duplicados
+            const duplicado = poligono.some(v => 
+                Math.abs(v.x - p.x) < 0.01 && Math.abs(v.y - p.y) < 0.01
+            );
+            
+            if (!duplicado) {
+                poligono.push(p);
+                ordenarPoligono();
+                dibujar();
+            }
+        });
+
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (apartadoActual === 2 || apartadoActual === 3) {
+                const rect = canvas.getBoundingClientRect();
+                const cx = e.clientX - rect.left;
+                const cy = e.clientY - rect.top;
+                punto = canvasToMath(cx, cy);
+                
+                if (apartadoActual === 2) {
+                    document.getElementById('puntoX').value = punto.x.toFixed(1);
+                    document.getElementById('puntoY').value = punto.y.toFixed(1);
+                } else {
+                    document.getElementById('puntoX3').value = punto.x.toFixed(1);
+                    document.getElementById('puntoY3').value = punto.y.toFixed(1);
+                }
+                dibujar();
+            }
+        });
+
+        function ordenarPoligono() {
+            if (poligono.length < 3) return;
+            const cx = poligono.reduce((s, p) => s + p.x, 0) / poligono.length;
+            const cy = poligono.reduce((s, p) => s + p.y, 0) / poligono.length;
+            poligono.sort((a, b) => 
+                Math.atan2(a.y - cy, a.x - cx) - Math.atan2(b.y - cy, b.x - cx)
+            );
+        }
+
+        function generarPoligonoAleatorio() {
+            const n = parseInt(document.getElementById('nVertices').value);
+            const puntos = [];
+            for (let i = 0; i < n; i++) {
+                puntos.push({
+                    x: Math.round((Math.random() - 0.5) * 20 * 2) / 2,
+                    y: Math.round((Math.random() - 0.5) * 16 * 2) / 2
+                });
+            }
+            const cx = puntos.reduce((s, p) => s + p.x, 0) / n;
+            const cy = puntos.reduce((s, p) => s + p.y, 0) / n;
+            puntos.sort((a, b) => 
+                Math.atan2(a.y - cy, a.x - cx) - Math.atan2(b.y - cy, b.x - cx)
+            );
+            poligono = puntos;
+            dibujar();
+        }
+
+        function limpiarPoligono() {
+            poligono = [];
+            dibujar();
+            document.getElementById('results').innerHTML = 
+                '<h3> Resultados del Análisis</h3><p>Añade vértices al polígono y selecciona un apartado.</p>';
+        }
+
+        function borrarUltimo() {
+            if (poligono.length > 0) {
+                poligono.pop();
+                dibujar();
+            }
+        }
+
+        function actualizarPuntoManual() {
+            punto.x = parseFloat(document.getElementById('puntoX').value);
+            punto.y = parseFloat(document.getElementById('puntoY').value);
+            dibujar();
+        }
+
+        function actualizarPuntoManual3() {
+            punto.x = parseFloat(document.getElementById('puntoX3').value);
+            punto.y = parseFloat(document.getElementById('puntoY3').value);
+            dibujar();
+        }
+
+        function cambiarApartado() {
+            apartadoActual = parseInt(document.getElementById('apartadoSelector').value);
+            
+            // Ocultar todos
+            document.querySelectorAll('.apartado-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Mostrar el seleccionado
+            if (apartadoActual > 0) {
+                document.getElementById('apartado' + apartadoActual).classList.add('active');
+            }
+            
+            // Actualizar leyendas
+            actualizarLeyendas();
+            
+            dibujar();
+            document.getElementById('results').innerHTML = 
+                '<h3> Resultados del Análisis</h3><p>Haz clic en "Analizar" para ver los resultados.</p>';
+        }
+
+        // ============================================================
+        // FUNCIONES ORIGINALES DE SAGEMATH (TRADUCIDAS A JAVASCRIPT)
+        // ============================================================
+
+        function areaSignada(a, b, c) {
+            return ((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)) / 2;
+        }
+
+        function dist(p, q) {
+            return Math.sqrt((p.x - q.x) ** 2 + (p.y - q.y) ** 2);
+        }
+
+        function testInterseccionSegmentos(p, q) {
+            const a1 = areaSignada(p[0], p[1], q[0]);
+            const a2 = areaSignada(p[0], p[1], q[1]);
+            const a3 = areaSignada(q[0], q[1], p[0]);
+            const a4 = areaSignada(q[0], q[1], p[1]);
+            
+            if (a1 * a2 < 0 && a3 * a4 < 0) {
+                return true;
+            } else {
+                if (enSegmentoII(p[0], q) || enSegmentoII(p[1], q) || enSegmentoII(q[0], p) || enSegmentoII(q[1], p)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        function enSegmentoII(p, s) {
+            if (areaSignada(p, s[0], s[1]) !== 0) {
+                return false;
+            }
+            if ((s[0].x <= p.x && p.x <= s[1].x) || (s[0].x >= p.x && p.x >= s[1].x)) {
+                if ((s[0].y <= p.y && p.y <= s[1].y) || (s[0].y >= p.y && p.y >= s[1].y)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function enSegmento(p, s) {
+            if (areaSignada(p, s[0], s[1]) !== 0) {
+                return false;
+            }
+            return dist(p, s[0]) + dist(p, s[1]) === dist(s[0], s[1]);
+        }
+
+        function enTriangulo(p, t) {
+            const a1 = areaSignada(t[0], t[1], p);
+            const a2 = areaSignada(t[1], t[2], p);
+            const a3 = areaSignada(t[2], t[0], p);
+
+            if ((a1 >= 0 && a2 >= 0 && a3 >= 0) || (a1 <= 0 && a2 <= 0 && a3 <= 0)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // APARTADO 1
+        function signo(x, eps = 1e-12) {
+            if (x > eps) {
+                return 1;
+            }
+            if (x < -eps) {
+                return -1;
+            }
+            return 0;
+        }
+
+        function orientacionPoligono(p) {
+            return signo(areaPoligono(p));
+        }
+
+        function esConvexo(p) {
+            const n = p.length;
+            const giros = [];
+            for (let i = 0; i < n; i++) {
+                const a = p[(i - 1 + n) % n];
+                const b = p[i];
+                const c = p[(i + 1) % n];
+                giros.push(signo(areaSignada(a, b, c)));
+            }
+            const girosNoCero = giros.filter(g => g !== 0);
+            return girosNoCero.length === 0 || girosNoCero.every(g => g === girosNoCero[0]);
+        }
+
+        // APARTADO 2
+        function apartado2PuntoEnPoligono1(P, q, mostrar = false) {
+            const p0 = P[0];
+            for (let i = 1; i < P.length - 1; i++) {
+                const vi_1 = P[i];
+                const vi_2 = P[i + 1];
+                const triangulo = [p0, vi_1, vi_2];
+                
+                if (enTriangulo(q, triangulo)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function apartado2PuntoEnPoligono2(polygonPoints, punto, pLejos) {
+            let esta = false;
+            let nCortes = 0;
+            const recta = [punto, pLejos];
+            
+            for (let i = 0; i < polygonPoints.length - 1; i++) {
+                const segmento = [polygonPoints[i], polygonPoints[i + 1]];
+                const interseccion = testInterseccionSegmentos(recta, segmento);
+                
+                if (interseccion) {
+                    nCortes++;
+                }
+                if (enSegmento(punto, segmento)) {
+                    esta = true;
+                }
+            }
+
+            const segmentoFinal = [polygonPoints[polygonPoints.length - 1], polygonPoints[0]];
+            const interseccionFinal = testInterseccionSegmentos(recta, segmentoFinal);
+            
+            if (interseccionFinal) {
+                nCortes++;
+            }
+            
+            if (nCortes % 2 !== 0 || esta === true || enSegmento(punto, segmentoFinal)) {
+                esta = true;
+            } else {
+                esta = false;
+            }
+            
+            return { esta, nCortes };
+        }
+
+        // APARTADO 3 
+        function apartado3_calcular_tangentes(P, q) {
+            let signos = [];
+            let tangentes = [];
+            const n = P.length;
+            
+            // Calcular signos para todos los segmentos
+            for (let i = 0; i < n; i++) {
+                let vi_1 = P[i];
+                let vi_2 = P[(i + 1) % n];
+                signos.push(signo(areaSignada(vi_1, vi_2, q)));
+            }
+            
+            // Verificar cambios de signo entre segmentos consecutivos
+            for (let i = 0; i < n; i++) {
+                let signoActual = signos[i];
+                let signoSiguiente = signos[(i + 1) % n];
+                
+                if (signoActual !== signoSiguiente) {
+                    // El vértice tangente es el que conecta ambos segmentos
+                    tangentes.push(P[(i + 1) % n]);
+                }
+            }
+            
+            return tangentes;
+        }
+
+        // APARTADO 4
+        function areaPoligono(p) {
+            let area = 0;
+            for (let i = 1; i < p.length - 1; i++) {
+                area += areaSignada(p[0], p[i], p[i + 1]);
+            }
+            return area;
+        }
+
+        // APARTADO 5
+        function diagonalesPoligono(P) {
+            const n = P.length;
+            const diagonalesInternas = [];
+            const diagonalesExternas = [];
+
+            for (let i = 0; i < n; i++) {
+                for (let j = i + 1; j < n; j++) {
+                    // Descartar lados adyacentes o cierre del polígono
+                    if (Math.abs(i - j) === 1 || (i === 0 && j === n - 1)) {
+                        continue;
+                    }
+
+                    const vi = P[i];
+                    const vj = P[j];
+                    const v_im1 = P[(i - 1 + n) % n];
+                    const v_ip1 = P[(i + 1) % n];
+                    const v_jm1 = P[(j - 1 + n) % n];
+                    const v_jp1 = P[(j + 1) % n];
+
+                    // Comprobar que no interseca ningún lado
+                    let interseca = false;
+                    for (let k = 0; k < n; k++) {
+                        const a = P[k];
+                        const b = P[(k + 1) % n];
+                        // Evita lados adyacentes
+                        if (k === i || k === j || k === (i - 1 + n) % n || k === (j - 1 + n) % n) {
+                            continue;
+                        }
+                        if (testInterseccionSegmentos([vi, vj], [a, b])) {
+                            interseca = true;
+                            break;
+                        }
+                    }
+                    if (interseca) {
+                        continue;
+                    }
+
+                    // Clasificación local: convexo o cóncavo
+                    // vértice vi
+                    const area_i = areaSignada(v_im1, vi, v_ip1);
+                    let cond_i;
+                    if (area_i > 0) {  // convexo
+                        cond_i = (areaSignada(vi, vj, v_im1) > 0) && (areaSignada(vi, vj, v_ip1) < 0);
+                    } else {  // cóncavo
+                        cond_i = !((areaSignada(vi, vj, v_im1) < 0) && (areaSignada(vi, vj, v_ip1) > 0));
+                    }
+                    
+                    // vértice vj
+                    const area_j = areaSignada(v_jm1, vj, v_jp1);
+                    let cond_j;
+                    if (area_j > 0) {  // convexo
+                        cond_j = (areaSignada(vj, vi, v_jm1) > 0) && (areaSignada(vj, vi, v_jp1) < 0);
+                    } else {  // cóncavo
+                        cond_j = !((areaSignada(vj, vi, v_jm1) < 0) && (areaSignada(vj, vi, v_jp1) > 0));
+                    }
+
+                    // Clasificación final
+                    if (cond_i && cond_j) {
+                        diagonalesInternas.push([vi, vj]);
+                    } else {
+                        diagonalesExternas.push([vi, vj]);
+                    }
+                }
+            }
+
+            return { diagonalesInternas, diagonalesExternas };
+        }
+
+        // APARTADO 6
+        function verticesConcavosConvexos(p) {
+            const orientacion = orientacionPoligono(p);
+            const convexos = [];
+            const concavos = [];
+            const n = p.length;
+            
+            for (let i = 0; i < n; i++) {
+                const a = p[(i - 1 + n) % n];
+                const b = p[i];
+                const c = p[(i + 1) % n];
+                const giro = signo(areaSignada(a, b, c));
+                
+                if (giro === orientacion) {
+                    convexos.push(b);
+                } else if (giro === -orientacion) {
+                    concavos.push(b);
+                }
+            }
+            
+            return { convexos, concavos };
+        }
+
+        // ============================================================
+        // ALGORITMO DE LEE (CIERRE CONVEXO) Y FUNCIONES DE TANGENTES
+        // ============================================================
+
+        function cierreConvexoLee(puntos) {
+            if (puntos.length < 3) return puntos;
+            
+            // Encontrar el punto con la coordenada y más baja (y más a la izquierda en caso de empate)
+            let puntoInicio = puntos[0];
+            for (let i = 1; i < puntos.length; i++) {
+                if (puntos[i].y < puntoInicio.y || 
+                    (puntos[i].y === puntoInicio.y && puntos[i].x < puntoInicio.x)) {
+                    puntoInicio = puntos[i];
+                }
+            }
+            
+            const hull = [puntoInicio];
+            let puntoActual = puntoInicio;
+            
+            do {
+                let siguientePunto = puntos[0];
+                
+                for (let punto of puntos) {
+                    if (punto === puntoActual) continue;
+                    
+                    const cross = areaSignada(puntoActual, siguientePunto, punto);
+                    
+                    if (siguientePunto === puntoActual || cross > 0 ||
+                        (cross === 0 && dist(puntoActual, punto) > dist(puntoActual, siguientePunto))) {
+                        siguientePunto = punto;
+                    }
+                }
+                
+                puntoActual = siguientePunto;
+                
+                // Si hemos vuelto al punto de inicio, terminamos
+                if (puntoActual === puntoInicio) break;
+                    
+                hull.push(puntoActual);
+                
+                // Prevenir ciclos infinitos por posibles errores de precisión
+                if (hull.length > puntos.length) break;
+                
+            } while (puntoActual !== puntoInicio);
+            
+            return hull;
+        }
+
+        function puntoMedio(a, b) {
+            return {
+                x: (a.x + b.x) / 2,
+                y: (a.y + b.y) / 2
+            };
+        }
+
+        function calcularInterseccionExacta(segmento1, segmento2) {
+            const [p1, p2] = segmento1;
+            const [p3, p4] = segmento2;
+            
+            const denominador = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y);
+            
+            if (Math.abs(denominador) < 1e-10) return null;
+            
+            const ua = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denominador;
+            
+            return {
+                x: p1.x + ua * (p2.x - p1.x),
+                y: p1.y + ua * (p2.y - p1.y)
+            };
+        }
+
+        function puntoEnPoligonoRobusto(poligono, punto) {
+            const n = poligono.length;
+            if (n < 3) return { esta: false, nCortes: 0, intersecciones: [] };
+            
+            // CORRECCIÓN: Punto lejano multiplicado por 1000 para que esté realmente lejos
+            const pMedio = puntoMedio(poligono[0], poligono[1]);
+            const vector = {
+                x: pMedio.x - punto.x,
+                y: pMedio.y - punto.y
+            };
+            const pLejos = {
+                x: punto.x + vector.x * 1000,  // Multiplicado por 1000 en lugar de 2
+                y: punto.y + vector.y * 1000
+            };
+            
+            let esta = false;
+            let nCortes = 0;
+            const intersecciones = [];
+            const recta = [punto, pLejos];
+            
+            // Verificar todos los segmentos
+            for (let i = 0; i < n - 1; i++) {
+                const segmento = [poligono[i], poligono[i + 1]];
+                
+                if (testInterseccionSegmentos(recta, segmento)) {
+                    nCortes++;
+                    const interseccion = calcularInterseccionExacta(recta, segmento);
+                    if (interseccion) {
+                        intersecciones.push(interseccion);
+                    }
+                }
+                
+                if (enSegmento(punto, segmento)) {
+                    esta = true;
+                }
+            }
+            
+            // Último segmento (cierre del polígono)
+            const segmentoFinal = [poligono[n - 1], poligono[0]];
+            if (testInterseccionSegmentos(recta, segmentoFinal)) {
+                nCortes++;
+                const interseccion = calcularInterseccionExacta(recta, segmentoFinal);
+                if (interseccion) {
+                    intersecciones.push(interseccion);
+                }
+            }
+            
+            if (enSegmento(punto, segmentoFinal)) {
+                esta = true;
+            }
+            
+            // Determinar si está dentro
+            if (nCortes % 2 !== 0 || esta) {
+                esta = true;
+            } else {
+                esta = false;
+            }
+            
+            return { esta, nCortes, intersecciones, pLejos };
+        }
+
+        // Funciones de análisis por apartado
+        function analizarConvexidad() {
+            if (poligono.length < 3) {
+                document.getElementById('results').innerHTML = 
+                    '<h3> Error</h3><p>Necesitas al menos 3 vértices para analizar convexidad.</p>';
+                return;
+            }
+
+            dibujar();
+            
+            const convexo = esConvexo(poligono);
+            const orientacion = orientacionPoligono(poligono);
+            
+            let resultado = '<h3> Resultados Apartado 1: Convexidad del Polígono</h3>';
+            resultado += `<p>Polígono con ${poligono.length} vértices</p>`;
+            resultado += '<p>═══════════════════════════════════</p>';
+            resultado += `<p><strong>Resultado:</strong> El polígono es ${convexo ? '<span style="color: green">CONVEXO ✓</span>' : '<span style="color: red">CÓNCAVO ✗</span>'}</p>`;
+            resultado += `<p><strong>Orientación:</strong> ${orientacion > 0 ? 'Antihoraria (↺)' : 'Horaria (↻)'}</p>`;
+            resultado += '<p>───────────────────────────────────</p>';
+            resultado += '<p><strong>Explicación:</strong></p>';
+            resultado += '<p>Se calcula el área signada de cada triplete de vértices consecutivos (v<sub>i-1</sub>, v<sub>i</sub>, v<sub>i+1</sub>).</p>';
+            resultado += `<p>Si todos los giros tienen el mismo signo, el polígono es convexo.</p>`;
+            
+            document.getElementById('results').innerHTML = resultado;
+        }
+
+        function analizarPuntoEnPoligono() {
+            if (poligono.length < 3) {
+                document.getElementById('results').innerHTML = 
+                    '<h3> Error</h3><p>Necesitas al menos 3 vértices.</p>';
+                return;
+            }
+
+            dibujar();
+            
+            const analisis = puntoEnPoligonoRobusto(poligono, punto);
+            const esta = analisis.esta;
+            const nCortes = analisis.nCortes;
+            const intersecciones = analisis.intersecciones;
+            const pLejos = analisis.pLejos;
+            
+            // Dibujar el rayo y las intersecciones
+            const cp = mathToCanvas(punto.x, punto.y);
+            const cpLejos = mathToCanvas(pLejos.x, pLejos.y);
+            
+            // Dibujar rayo
+            ctx.strokeStyle = '#FF69B4';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(cp.x, cp.y);
+            ctx.lineTo(cpLejos.x, cpLejos.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Dibujar intersecciones
+            intersecciones.forEach(interseccion => {
+                const cInt = mathToCanvas(interseccion.x, interseccion.y);
+                ctx.fillStyle = '#FF69B4';
+                ctx.beginPath();
+                ctx.arc(cInt.x, cInt.y, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cInt.x, cInt.y, 6, 0, 2 * Math.PI);
+                ctx.stroke();
+            });
+            
+            let resultado = '<h3> Resultados Apartado 2: Punto en Polígono</h3>';
+            resultado += `<p>Polígono con ${poligono.length} vértices</p>`;
+            resultado += `<p>Punto de estudio: (${punto.x.toFixed(2)}, ${punto.y.toFixed(2)})</p>`;
+            resultado += '<p>═══════════════════════════════════</p>';
+            
+            if (esta) {
+                resultado += '<p><strong>Resultado:</strong> <span style="color: green">El punto está DENTRO del polígono ✓</span></p>';
+            } else {
+                resultado += '<p><strong>Resultado:</strong> <span style="color: red">El punto está FUERA del polígono</span></p>';
+            }
+            
+            resultado += `<p><strong>Número de intersecciones:</strong> ${nCortes}</p>`;
+            resultado += `<p><strong>Paridad:</strong> ${nCortes % 2 === 0 ? 'PAR (exterior)' : 'IMPAR (interior)'}</p>`;
+            
+            if (intersecciones.length > 0) {
+                resultado += '<p><strong>Puntos de intersección:</strong></p>';
+                intersecciones.forEach((int, idx) => {
+                    resultado += `<p>  • Intersección ${idx + 1}: (${int.x.toFixed(2)}, ${int.y.toFixed(2)})</p>`;
+                });
+            }
+            
+            resultado += '<p>───────────────────────────────────</p>';
+            resultado += '<p><strong>Método:</strong> Ray Casting con dirección segura</p>';
+            resultado += '<p>Se traza un rayo largo en dirección al punto medio entre V0 y V1 para evitar pasar por vértices.</p>';
+            resultado += `<p>Si el número de intersecciones es impar, el punto está dentro; si es par, está fuera.</p>`;
+            resultado += '<p><em>Nota: El rayo se extiende lo suficiente para garantizar que sale del polígono.</em></p>';
+            
+            document.getElementById('results').innerHTML = resultado;
+        }
+
+        function analizarTangentes() {
+            if (poligono.length < 3) {
+                document.getElementById('results').innerHTML = 
+                    '<h3> Error</h3><p>Necesitas al menos 3 vértices.</p>';
+                return;
+            }
+
+            dibujar();
+            
+            const analisis = puntoEnPoligonoRobusto(poligono, punto);
+            const posicion = analisis.esta ? "interior" : "exterior";
+            
+            // 1. Si el punto está dentro del polígono
+            if (posicion === "interior") {
+                let resultado = '<h3> Resultados Apartado 3: Tangentes</h3>';
+                resultado += '<p>═══════════════════════════════════</p>';
+                resultado += `<p><strong> No es posible calcular tangentes</strong></p>`;
+                resultado += `<p>El punto (${punto.x.toFixed(2)}, ${punto.y.toFixed(2)}) está DENTRO del polígono.</p>`;
+                resultado += '<p>Las tangentes solo se calculan desde puntos exteriores.</p>';
+                document.getElementById('results').innerHTML = resultado;
+                return;
+            }
+
+            // 2. Si el punto está fuera, verificar convexidad
+            const esPoligonoConvexo = esConvexo(poligono);
+            
+            if (!esPoligonoConvexo) {
+                const calcularCierre = confirm("El polígono no es convexo. ¿Deseas calcular el cierre convexo para poder calcular las tangentes?");
+                
+                if (!calcularCierre) {
+                    let resultado = '<h3> Resultados Apartado 3: Tangentes</h3>';
+                    resultado += '<p>═══════════════════════════════════</p>';
+                    resultado += '<p><strong> No es posible calcular tangentes</strong></p>';
+                    resultado += '<p>El polígono no es convexo y no se ha calculado el cierre convexo.</p>';
+                    resultado += '<p>Solo se pueden calcular tangentes en polígonos convexos.</p>';
+                    document.getElementById('results').innerHTML = resultado;
+                    return;
+                } else {
+                    // Calcular el cierre convexo usando el algoritmo de Lee
+                    const cierre = cierreConvexoLee(poligono);
+                    
+                    // Calcular tangentes sobre el cierre convexo - FUNCIÓN CORREGIDA
+                    const tangentes = apartado3_calcular_tangentes(cierre, punto);
+                    
+                    // Dibujar el cierre convexo con relleno morado
+                    ctx.fillStyle = 'rgba(128, 0, 128, 0.3)'; // Morado semitransparente
+                    ctx.beginPath();
+                    const firstCierre = mathToCanvas(cierre[0].x, cierre[0].y);
+                    ctx.moveTo(firstCierre.x, firstCierre.y);
+                    for (let i = 1; i < cierre.length; i++) {
+                        const p = mathToCanvas(cierre[i].x, cierre[i].y);
+                        ctx.lineTo(p.x, p.y);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Borde del cierre convexo
+                    ctx.strokeStyle = 'purple';
+                    ctx.lineWidth = 3;
+                    ctx.setLineDash([5, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(firstCierre.x, firstCierre.y);
+                    for (let i = 1; i < cierre.length; i++) {
+                        const p = mathToCanvas(cierre[i].x, cierre[i].y);
+                        ctx.lineTo(p.x, p.y);
+                    }
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    // Resaltar vértices del cierre convexo
+                    cierre.forEach(p => {
+                        const cp = mathToCanvas(p.x, p.y);
+                        ctx.fillStyle = 'purple';
+                        ctx.beginPath();
+                        ctx.arc(cp.x, cp.y, 8, 0, 2 * Math.PI);
+                        ctx.fill();
+                    });
+                    
+                    let resultado = '<h3> Resultados Apartado 3: Tangentes desde Punto Exterior</h3>';
+                    resultado += `<p>Punto: (${punto.x.toFixed(2)}, ${punto.y.toFixed(2)})</p>`;
+                    resultado += `<p>Polígono original: ${poligono.length} vértices (cóncavo)</p>`;
+                    resultado += `<p>Cierre convexo: ${cierre.length} vértices</p>`;
+                    resultado += '<p>═══════════════════════════════════</p>';
+                    resultado += `<p><strong>Número de vértices tangentes:</strong> ${tangentes.length}</p>`;
+                    
+                    if (tangentes.length > 0) {
+                        resultado += '<p><strong>Coordenadas de vértices tangentes:</strong></p>';
+                        tangentes.forEach((t, idx) => {
+                            resultado += `<p>  • Tangente ${idx + 1}: (${t.x.toFixed(2)}, ${t.y.toFixed(2)})</p>`;
+                        });
+                    }
+                    
+                    resultado += '<p>───────────────────────────────────</p>';
+                    resultado += '<p><strong>Método:</strong> Cambio de signo sobre el cierre convexo</p>';
+                    resultado += '<p>Un vértice es tangente cuando hay cambio de signo en el área signada de las aristas adyacentes respecto al punto.</p>';
+                    
+                    // Dibujar las tangentes
+                    if (tangentes.length > 0) {
+                        const cp = mathToCanvas(punto.x, punto.y);
+                        tangentes.forEach(t => {
+                            const ct = mathToCanvas(t.x, t.y);
+                            ctx.strokeStyle = 'blue';
+                            ctx.lineWidth = 2;
+                            ctx.setLineDash([5, 5]);
+                            ctx.beginPath();
+                            ctx.moveTo(cp.x, cp.y);
+                            ctx.lineTo(ct.x, ct.y);
+                            ctx.stroke();
+                            ctx.setLineDash([]);
+                            
+                            ctx.fillStyle = 'blue';
+                            ctx.beginPath();
+                            ctx.arc(ct.x, ct.y, 8, 0, 2 * Math.PI);
+                            ctx.fill();
+                        });
+                    }
+                    
+                    document.getElementById('results').innerHTML = resultado;
+                    return;
+                }
+            }
+
+            // 3. Si el polígono es convexo, calcular tangentes normalmente - FUNCIÓN CORREGIDA
+            const tangentes = apartado3_calcular_tangentes(poligono, punto);
+            
+            let resultado = '<h3> Resultados Apartado 3: Tangentes desde Punto Exterior</h3>';
+            resultado += `<p>Punto: (${punto.x.toFixed(2)}, ${punto.y.toFixed(2)})</p>`;
+            resultado += `<p>Polígono: ${poligono.length} vértices (convexo ✓)</p>`;
+            resultado += '<p>═══════════════════════════════════</p>';
+            resultado += `<p><strong>Número de vértices tangentes:</strong> ${tangentes.length}</p>`;
+            
+            if (tangentes.length > 0) {
+                resultado += '<p><strong>Coordenadas de vértices tangentes:</strong></p>';
+                tangentes.forEach((t, idx) => {
+                    resultado += `<p>  • Tangente ${idx + 1}: (${t.x.toFixed(2)}, ${t.y.toFixed(2)})</p>`;
+                });
+            }
+            
+            resultado += '<p>───────────────────────────────────</p>';
+            resultado += '<p><strong>Método:</strong> Cambio de signo</p>';
+            resultado += '<p>Un vértice es tangente cuando hay cambio de signo en el área signada de las aristas adyacentes respecto al punto.</p>';
+            
+            if (tangentes.length > 0) {
+                const cp = mathToCanvas(punto.x, punto.y);
+                tangentes.forEach(t => {
+                    const ct = mathToCanvas(t.x, t.y);
+                    ctx.strokeStyle = 'blue';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    ctx.moveTo(cp.x, cp.y);
+                    ctx.lineTo(ct.x, ct.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    ctx.fillStyle = 'blue';
+                    ctx.beginPath();
+                    ctx.arc(ct.x, ct.y, 8, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
+            }
+            
+            document.getElementById('results').innerHTML = resultado;
+        }
+
+        function analizarArea() {
+            if (poligono.length < 3) {
+                document.getElementById('results').innerHTML = 
+                    '<h3> Error</h3><p>Necesitas al menos 3 vértices.</p>';
+                return;
+            }
+
+            dibujar();
+            
+            const area = Math.abs(areaPoligono(poligono));
+            
+            let resultado = '<h3> Resultados Apartado 4: Área del Polígono</h3>';
+            resultado += `<p>Polígono con ${poligono.length} vértices</p>`;
+            resultado += '<p>═══════════════════════════════════</p>';
+            resultado += `<p><strong>Área:</strong> ${area.toFixed(4)} unidades²</p>`;
+            resultado += '<p>───────────────────────────────────</p>';
+            resultado += '<p><strong>Método:</strong> Área signada por triangulación</p>';
+            resultado += '<p>Se triangula desde un vértice fijo y se suman las áreas signadas de cada triángulo.</p>';
+            resultado += '<p>Fórmula: Σ área(p₀, pᵢ, pᵢ₊₁)</p>';
+            
+            document.getElementById('results').innerHTML = resultado;
+        }
+
+        function analizarDiagonales() {
+            if (poligono.length < 4) {
+                document.getElementById('results').innerHTML = 
+                    '<h3> Error</h3><p>Necesitas al menos 4 vértices para calcular diagonales.</p>';
+                return;
+            }
+
+            dibujar();
+            
+            const { diagonalesInternas, diagonalesExternas } = diagonalesPoligono(poligono);
+            
+            let resultado = '<h3> Resultados Apartado 5: Diagonales del Polígono</h3>';
+            resultado += `<p>Polígono con ${poligono.length} vértices</p>`;
+            resultado += '<p>═══════════════════════════════════</p>';
+            resultado += `<p><strong>Diagonales internas:</strong> ${diagonalesInternas.length}</p>`;
+            resultado += `<p><strong>Diagonales externas:</strong> ${diagonalesExternas.length}</p>`;
+            resultado += `<p><strong>Total de diagonales:</strong> ${diagonalesInternas.length + diagonalesExternas.length}</p>`;
+            resultado += '<p>───────────────────────────────────</p>';
+            resultado += '<p><strong>Clasificación:</strong></p>';
+            resultado += '<p>• <strong>Interna:</strong> Une dos vértices sin salir del polígono</p>';
+            resultado += '<p>• <strong>Externa:</strong> Pasa por el exterior del polígono</p>';
+            
+            if (document.getElementById('showDiagInt').checked) {
+                ctx.strokeStyle = 'orange';
+                ctx.lineWidth = 2;
+                ctx.globalAlpha = 0.6;
+                diagonalesInternas.forEach(d => {
+                    const p1 = mathToCanvas(d[0].x, d[0].y);
+                    const p2 = mathToCanvas(d[1].x, d[1].y);
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                });
+                ctx.globalAlpha = 1;
+            }
+            
+            if (document.getElementById('showDiagExt').checked) {
+                ctx.strokeStyle = 'gray';
+                ctx.lineWidth = 2;
+                ctx.globalAlpha = 0.5;
+                ctx.setLineDash([5, 5]);
+                diagonalesExternas.forEach(d => {
+                    const p1 = mathToCanvas(d[0].x, d[0].y);
+                    const p2 = mathToCanvas(d[1].x, d[1].y);
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                });
+                ctx.setLineDash([]);
+                ctx.globalAlpha = 1;
+            }
+            
+            document.getElementById('results').innerHTML = resultado;
+        }
+
+        function analizarVertices() {
+            if (poligono.length < 3) {
+                document.getElementById('results').innerHTML = 
+                    '<h3> Error</h3><p>Necesitas al menos 3 vértices.</p>';
+                return;
+            }
+
+            dibujar();
+            
+            const { convexos, concavos } = verticesConcavosConvexos(poligono);
+            
+            let resultado = '<h3> Resultados Apartado 6: Clasificación de Vértices</h3>';
+            resultado += `<p>Polígono con ${poligono.length} vértices</p>`;
+            resultado += '<p>═══════════════════════════════════</p>';
+            resultado += `<p><strong>Vértices convexos:</strong> ${convexos.length}</p>`;
+            resultado += `<p><strong>Vértices cóncavos:</strong> ${concavos.length}</p>`;
+            resultado += '<p>───────────────────────────────────</p>';
+            resultado += '<p><strong>Criterio de clasificación:</strong></p>';
+            resultado += '<p>Para cada vértice vᵢ se analiza el giro formado por (vᵢ₋₁, vᵢ, vᵢ₊₁):</p>';
+            resultado += '<p>• Si el giro coincide con la orientación del polígono → <span style="color: green">CONVEXO</span></p>';
+            resultado += '<p>• Si el giro es opuesto a la orientación → <span style="color: red">CÓNCAVO</span></p>';
+            
+            if (document.getElementById('showVertices').checked) {
+                convexos.forEach(v => {
+                    const cv = mathToCanvas(v.x, v.y);
+                    ctx.fillStyle = 'green';
+                    ctx.globalAlpha = 0.7;
+                    ctx.beginPath();
+                    ctx.arc(cv.x, cv.y, 10, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                });
+                
+                concavos.forEach(v => {
+                    const cv = mathToCanvas(v.x, v.y);
+                    ctx.fillStyle = 'red';
+                    ctx.globalAlpha = 0.7;
+                    ctx.fillRect(cv.x - 9, cv.y - 9, 18, 18);
+                    ctx.globalAlpha = 1;
+                });
+            }
+            
+            document.getElementById('results').innerHTML = resultado;
+        }
+
+        function analizarCierreConvexo() {
+            if (poligono.length < 3) {
+                document.getElementById('results').innerHTML = 
+                    '<h3> Error</h3><p>Necesitas al menos 3 vértices.</p>';
+                return;
+            }
+
+            dibujar();
+            
+            const cierre = cierreConvexoLee(poligono);
+            
+            // Dibujar el cierre convexo con relleno morado
+            ctx.fillStyle = 'rgba(128, 0, 128, 0.3)'; // Morado semitransparente
+            ctx.beginPath();
+            const firstCierre = mathToCanvas(cierre[0].x, cierre[0].y);
+            ctx.moveTo(firstCierre.x, firstCierre.y);
+            for (let i = 1; i < cierre.length; i++) {
+                const p = mathToCanvas(cierre[i].x, cierre[i].y);
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.closePath();
+            ctx.fill();
+            
+            // Borde del cierre convexo
+            ctx.strokeStyle = 'purple';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 3]);
+            ctx.beginPath();
+            ctx.moveTo(firstCierre.x, firstCierre.y);
+            for (let i = 1; i < cierre.length; i++) {
+                const p = mathToCanvas(cierre[i].x, cierre[i].y);
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Resaltar vértices del cierre convexo
+            cierre.forEach(p => {
+                const cp = mathToCanvas(p.x, p.y);
+                ctx.fillStyle = 'purple';
+                ctx.beginPath();
+                ctx.arc(cp.x, cp.y, 8, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            let resultado = '<h3> Resultados Apartado 7: Cierre Convexo</h3>';
+            resultado += `<p>Polígono original: ${poligono.length} vértices</p>`;
+            resultado += `<p>Cierre convexo: ${cierre.length} vértices</p>`;
+            resultado += '<p>═══════════════════════════════════</p>';
+            resultado += `<p><strong>Vértices del cierre convexo:</strong></p>`;
+            cierre.forEach((v, idx) => {
+                resultado += `<p>  • Vértice ${idx + 1}: (${v.x.toFixed(2)}, ${v.y.toFixed(2)})</p>`;
+            });
+            resultado += '<p>───────────────────────────────────</p>';
+            resultado += '<p><strong>Método:</strong> Algoritmo de Lee (Gift Wrapping)</p>';
+            resultado += '<p>1. Se encuentra el punto más abajo (y más a la izquierda en caso de empate)</p>';
+            resultado += '<p>2. Se envuelve el conjunto de puntos buscando siempre el punto más a la izquierda</p>';
+            resultado += '<p>3. El proceso termina cuando se vuelve al punto inicial</p>';
+            
+            document.getElementById('results').innerHTML = resultado;
+        }
+
+        // Inicializar
+        dibujar();
+        generarPoligonoAleatorio();
+        actualizarLeyendas();
+    </script>
+</body>
+</html>
