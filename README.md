@@ -23,7 +23,7 @@
   </p>
 
   <h3>
-    <a href="https://andresgilvicente.github.io/COMPUTATIONAL-GEOMETRY-TOOLKIT/web_app/geometric_presentation.html">
+    <a href="https://andresgilvicente.github.io/COMPUTATIONAL-GEOMETRY-TOOLKIT/web_app/geometric_applet.html">
       🚀 LANZAR WEB INTERACTIVA
     </a>
   </h3>
@@ -62,4 +62,5 @@ El proyecto mantiene una separación clara entre la lógica algorítmica pura (P
 * **Andrés Gil Vicente** 
 
 *Fecha de finalización: 25 de noviembre de 2025*
+
 
