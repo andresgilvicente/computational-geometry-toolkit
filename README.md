@@ -23,7 +23,7 @@
   </p>
 
   <h3>
-    <a href="https://andresgilvicente.github.io/COMPUTATIONAL-GEOMETRY-TOOLKIT/web_app/geometric_applet.html">
+    <a href="https://andresgilvicente.github.io/computational-geometry-toolkit/web_app/geometric_applet.html">
       🚀 LANZAR WEB INTERACTIVA
     </a>
   </h3>
@@ -53,7 +53,20 @@ El proyecto mantiene una separación clara entre la lógica algorítmica pura (P
 │
 ├── 📄 .gitignore                         # Configuración de exclusiones de Git
 └── 📄 README.md                          # Documentación principal del repositorio
+└── 📄 index.html                         # Página de inicio (landing) para GitHub Pages: redirige a la app interactiva
 ```
+
+## 📚 Documentación y Guía de Uso
+
+Toda la **documentación del proyecto**, incluyendo:
+
+- La **explicación teórica de los algoritmos** de geometría computacional implementados (envolvente convexa, ray casting, tangentes, etc.)
+- El **análisis de su funcionamiento paso a paso**  
+- Una **guía completa de uso de la web interactiva**
+
+se encuentra disponible en la **página de presentación del proyecto**, accesible desde el enlace de la web interactiva, en la parte de teoría.
+
+Esta página actúa como **manual principal del proyecto**, integrando teoría, visualizaciones dinámicas y explicaciones orientadas a facilitar la comprensión de los algoritmos geométricos implementados.
 
 ## 👥 Autores
 
@@ -62,5 +75,6 @@ El proyecto mantiene una separación clara entre la lógica algorítmica pura (P
 * **Andrés Gil Vicente** 
 
 *Fecha de finalización: 25 de noviembre de 2025*
+
 
 
