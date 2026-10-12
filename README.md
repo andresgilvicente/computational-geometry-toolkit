@@ -7,6 +7,8 @@
   <h1>📐 Computational Geometry Toolkit</h1>
   <p><strong>Interactive tool for algorithmic analysis of polygons and planar geometry</strong></p>
 
+  <p><strong>Development period: </strong>September–December 2025</p>
+
   <p>
     <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">
       <img src="https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
@@ -75,5 +77,4 @@ This page acts as the **main manual for the project**, integrating theory, dynam
 * **Patricia Díaz Barrón**
 * **Andrés Gil Vicente**
 
-*Completion date: November 25, 2025*
 
